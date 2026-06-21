@@ -1,0 +1,471 @@
+Phase 1 : Server Setup
+1. app.listen()
+Syntax
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+Meaning
+
+Server ko start karta hai aur specified port par requests sunna shuru karta hai.
+
+Why are we using it?
+
+Without it, hamara Express application start hi nahi hoga.
+
+Internal Working
+Client
+↓
+Port 5000
+↓
+Express Server
+Real World Analogy
+
+Restaurant ka shutter kholna.
+
+Phase 2 : Request-Response Cycle
+Overall Flow
+Client
+↓
+app.js
+↓
+Routes
+↓
+Controllers
+↓
+Response
+2. app.use()
+Syntax
+app.use("/api/auth", authRoutes);
+Meaning
+
+/api/auth se shuru hone wali saari requests ko authRoutes ke paas bhej do.
+
+Why are we using it?
+
+Code ko modular aur organized rakhne ke liye.
+
+Internal Working
+POST /api/auth/register
+↓
+app.js
+↓
+authRoutes.js
+Real World Analogy
+
+Receptionist customer ko sahi department me bhejta hai.
+
+3. Router
+Syntax
+router.post("/register", registerUser);
+Meaning
+
+Agar /register endpoint par POST request aaye to registerUser() function execute karo.
+
+Why are we using it?
+
+Endpoints ko functions se map karne ke liye.
+
+Internal Working
+
+Express routing table banata hai.
+
+POST /register
+↓
+registerUser()
+Real World Analogy
+
+Waiter order chef tak pahunchata hai.
+
+HTTP Methods
+GET
+Syntax
+router.get("/profile", getProfile);
+Purpose
+
+Data retrieve karna.
+
+Examples:
+
+Videos lana
+Profile lana
+POST
+Syntax
+router.post("/register", registerUser);
+Purpose
+
+Naya data create karna.
+
+Examples:
+
+User register
+Video upload
+PUT
+Syntax
+router.put("/profile", updateProfile);
+Purpose
+
+Existing data update karna.
+
+DELETE
+Syntax
+router.delete("/video/:id", deleteVideo);
+Purpose
+
+Data delete karna.
+
+Controllers
+Syntax
+export const registerUser = (req, res) => {
+
+};
+Meaning
+
+Business logic yahan likhte hain.
+
+Why are we using it?
+
+Logic ko routes se separate rakhne ke liye.
+
+Real World Analogy
+
+Chef khana banata hai.
+
+Middleware
+express.json()
+Syntax
+app.use(express.json());
+Meaning
+
+Incoming JSON ko JavaScript object me convert karta hai.
+
+Why are we using it?
+
+Express by default JSON nahi samajhta.
+
+Example
+
+Incoming:
+
+{
+  "name":"Aditya"
+}
+
+After conversion:
+
+{
+  name: "Aditya"
+}
+Without express.json()
+req.body
+
+becomes
+
+undefined
+Request Object
+req.body
+Syntax
+req.body
+Meaning
+
+Client dwara bheja gaya data.
+
+Example:
+
+{
+  "email":"aditya@gmail.com",
+  "password":"123456"
+}
+
+Access:
+
+req.body.email
+req.body.password
+Wrong
+req.body()
+Correct
+req.body
+
+Because body ek object hai, function nahi.
+
+Response Object
+res.send()
+Syntax
+res.send("Hello");
+Purpose
+
+Plain text bhejna.
+
+res.json()
+Syntax
+res.json({
+    success:true
+});
+Purpose
+
+JSON response bhejna.
+
+res.status()
+Syntax
+res.status(201)
+Meaning
+
+HTTP status code set karta hai.
+
+Examples:
+
+res.status(200)
+
+Success
+
+res.status(201)
+
+Created
+
+res.status(400)
+
+Bad Request
+
+res.status(401)
+
+Unauthorized
+
+res.status(404)
+
+Not Found
+
+res.status(500)
+
+Internal Server Error
+
+Environment Variables
+.env
+Syntax
+PORT=5000
+
+MONGO_URI=....
+
+JWT_SECRET=....
+Meaning
+
+Sensitive information aur configuration ko store karna.
+
+Why?
+Security
+Flexibility
+Maintainability
+Real World Analogy
+
+Locker
+
+dotenv
+Installation
+npm install dotenv
+Syntax
+import dotenv from "dotenv";
+
+dotenv.config();
+Meaning
+
+.env file ko load karna.
+
+Internal Working
+.env
+↓
+dotenv.config()
+↓
+process.env
+process.env
+Syntax
+process.env.PORT
+Meaning
+
+Environment variables ko access karna.
+
+Example
+const PORT = process.env.PORT;
+Database
+Why MongoDB?
+
+Permanent storage ke liye.
+
+Mongoose
+Why?
+
+Node.js aur MongoDB ke beech bridge ka kaam karta hai.
+
+Node.js
+↓
+Mongoose
+↓
+MongoDB
+db.js
+Purpose
+
+Sirf database connection ka code rakhna.
+
+Principle
+
+Single Responsibility Principle
+
+Ek file ka ek hi kaam hona chahiye.
+
+Async Function
+Syntax
+const connectDB = async () => {
+
+};
+Meaning
+
+Asynchronous operations perform kar sakta hai.
+
+Why?
+
+Database connection me time lagta hai.
+
+Await
+Syntax
+await mongoose.connect(...)
+Meaning
+
+Connection complete hone tak wait karo.
+
+Internal Working
+Node
+↓
+Internet
+↓
+MongoDB Atlas
+↓
+Connection Established
+↓
+Continue
+try-catch
+Syntax
+try{
+
+}
+catch(error){
+
+}
+Purpose
+
+Errors ko safely handle karna.
+
+process.exit()
+Syntax
+process.exit(1);
+Meaning
+
+Node process ko terminate karna.
+
+Why?
+
+Agar database connect nahi hua to server chalane ka fayda nahi.
+
+Schema
+Syntax
+const userSchema = new mongoose.Schema({
+
+});
+Meaning
+
+Data ka structure define karta hai.
+
+Real World Analogy
+
+Admission Form
+
+Field Properties
+type
+Syntax
+type: String
+Meaning
+
+Data type batata hai.
+
+Examples:
+
+String
+Number
+Boolean
+Array
+Date
+Object
+required
+Syntax
+required: true
+Meaning
+
+Field mandatory hai.
+
+unique
+Syntax
+unique: true
+Meaning
+
+Duplicate values allow nahi hongi.
+
+Examples:
+
+email
+username
+default
+Syntax
+default: "free"
+Meaning
+
+Agar value provide nahi ki gayi to automatically ye value assign ho jayegi.
+
+Model
+Syntax
+const User = mongoose.model("User", userSchema);
+Meaning
+
+Schema ko model me convert karna.
+
+Why?
+
+Database operations perform karne ke liye.
+
+CRUD Methods
+Create
+Syntax
+User.create()
+Purpose
+
+Naya document insert karna.
+
+Find
+Syntax
+User.find()
+Purpose
+
+Saare documents lana.
+
+Find One
+Syntax
+User.findOne()
+Purpose
+
+Ek document lana.
+
+Find By Id
+Syntax
+User.findById()
+Purpose
+
+ID ke basis par document lana.
+
+Update
+Syntax
+User.updateOne()
+Purpose
+
+Document update karna.
+
+Delete
+Syntax
+User.deleteOne()
+Purpose
+
+Document delete karna.
