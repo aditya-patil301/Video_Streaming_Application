@@ -2,13 +2,13 @@ import jwt from "jsonwebtoken";
 
 export const protect = ((req, res, next) => {
     try {
-        console.log(req.header());
+        console.log(req.headers);
         const authHeader = req.header("Authorization");
 
         console.log(authHeader);
 
-        if (!authHeader) {
-            res.status(401).json({
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({
                 success: false,
                 message: "No token found"
             });
@@ -18,14 +18,16 @@ export const protect = ((req, res, next) => {
 
         const decode = jwt.verify(token, process.env.JWT_SECRET);
 
-        req.usedID = decoded.id;
+        console.log(decode);
+
+        req.userId = decode.id;
 
         next();
 
-    } catch(error){
-        res.status(401).json({
+    } catch (error) {
+        return res.status(401).json({
             success: false,
-            message: "Invalid token"
-        })
+            message: error.message
+        });
     }
 });

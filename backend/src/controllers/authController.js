@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 import User from "../models/user.js";
 
 export const registerUser = async (req, res) => {
@@ -86,8 +88,7 @@ export const getProfile = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            message:
-                error.message
+            message: error.message
         });
 
     }
